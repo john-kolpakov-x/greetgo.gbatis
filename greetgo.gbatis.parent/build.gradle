@@ -1,0 +1,27 @@
+allprojects {
+  apply plugin: 'idea'
+  apply plugin: 'java'
+  apply plugin: 'maven'
+
+  repositories {
+    mavenCentral()
+  }
+}
+
+subprojects {
+
+  dependencies {
+    testCompile 'org.testng:testng:6.9.10'
+    testCompile 'org.easytesting:fest-assert:1.4'
+  }
+
+  sourceSets {
+    main.java.srcDirs = ["src", "src_resources"]
+    main.resources.srcDirs = ["src", "src_resources"]
+    main.output.resourcesDir = "build/classes/main"
+    test.java.srcDirs = ["test_src", "test_src_resources"]
+    test.resources.srcDirs = ["test_src", "test_src_resources"]
+    test.output.resourcesDir = "build/classes/test"
+  }
+
+}
