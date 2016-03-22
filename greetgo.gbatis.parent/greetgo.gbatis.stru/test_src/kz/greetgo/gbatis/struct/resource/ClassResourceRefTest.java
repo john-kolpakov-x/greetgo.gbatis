@@ -69,6 +69,9 @@ public class ClassResourceRefTest {
 
     ResourceRef res4_two = ClassResourceRef.create(ClassResourceRefExample.class, "../res4.txt");
 
+    System.out.println(res4_one);
+    System.out.println(res4_two);
+
     assertThat(res4_one.equals(res4_two)).isTrue();
 
   }
@@ -106,6 +109,15 @@ public class ClassResourceRefTest {
     String path = ClassResourceRef.normalizePath("asd///wow//../more/./luna/../file.txt");
 
     assertThat(path).isEqualTo("asd/more/file.txt");
+
+  }
+
+  @Test
+  public void normalizePath_005() throws Exception {
+
+    String path = ClassResourceRef.normalizePath("more/../../file.txt");
+
+    assertThat(path).isEqualTo("../file.txt");
 
   }
 
