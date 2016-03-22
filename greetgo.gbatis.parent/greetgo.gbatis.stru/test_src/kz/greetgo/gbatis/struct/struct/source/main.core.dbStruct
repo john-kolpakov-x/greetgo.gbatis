@@ -1,0 +1,22 @@
+
+@enum TransferStatus kz.greetgo.gbatis.struct.TransferStatus
+
+@alias line str500
+@alias word str100
+
+@subpackage main.core
+
+client str50         -- клиент
+  surname    str500  -- фамилия клиента
+  name       str500  -- имя
+  patronymic line    -- отчество
+
+score str50
+  number word
+
+transfer str50
+  from score
+  to   score
+  actual bool
+  status TransferStatus
+

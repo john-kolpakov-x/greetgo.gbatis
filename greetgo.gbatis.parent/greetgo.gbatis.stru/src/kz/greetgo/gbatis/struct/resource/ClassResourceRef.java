@@ -1,6 +1,7 @@
-package kz.greetgo.gbatis.stru.resource;
+package kz.greetgo.gbatis.struct.resource;
 
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 public class ClassResourceRef implements ResourceRef {
 
@@ -13,7 +14,16 @@ public class ClassResourceRef implements ResourceRef {
   }
 
   public static ResourceRef create(Class<?> aClass, String path) {
-    return new ClassResourceRef(aClass, path);
+    return new ClassResourceRef(aClass, normalizePath(path));
+  }
+
+  private static final Pattern KILL1 = Pattern.compile("//");
+  private static final Pattern KILL2 = Pattern.compile("/\\./");
+  private static final Pattern KILL3 = Pattern.compile("/[^/]+/\\.\\./");
+
+  static String normalizePath(String path) {
+
+    return null;
   }
 
   @Override

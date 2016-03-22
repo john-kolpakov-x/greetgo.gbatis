@@ -1,6 +1,6 @@
-package kz.greetgo.gbatis.stru.resource;
+package kz.greetgo.gbatis.struct.resource;
 
-import kz.greetgo.gbatis.stru.resource.subpackage.ClassResourceRefExample;
+import kz.greetgo.gbatis.struct.resource.subpackage.ClassResourceRefExample;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -59,4 +59,54 @@ public class ClassResourceRefTest {
     assertThat(streamToStr(res3More.getInputStream())).isEqualTo("res3 contents");
 
   }
+
+  @Test
+  public void testEquals() throws Exception {
+
+    ResourceRef res2 = ClassResourceRef.create(ClassResourceRefExample.class, "more/res2.txt");
+
+    ResourceRef res4_one = res2.change("../../res4.txt");
+
+    ResourceRef res4_two = ClassResourceRef.create(ClassResourceRefExample.class, "../res4.txt");
+
+    assertThat(res4_one.equals(res4_two)).isTrue();
+
+  }
+
+  @Test
+  public void normalizePath_001() throws Exception {
+
+    String path = ClassResourceRef.normalizePath("asd/wow/../more/file.txt");
+
+    assertThat(path).isEqualTo("asd/more/file.txt");
+
+  }
+
+  @Test
+  public void normalizePath_002() throws Exception {
+
+    String path = ClassResourceRef.normalizePath("asd//file.txt");
+
+    assertThat(path).isEqualTo("asd/file.txt");
+
+  }
+
+  @Test
+  public void normalizePath_003() throws Exception {
+
+    String path = ClassResourceRef.normalizePath("asd/./file.txt");
+
+    assertThat(path).isEqualTo("asd/file.txt");
+
+  }
+
+  @Test
+  public void normalizePath_004() throws Exception {
+
+    String path = ClassResourceRef.normalizePath("asd///wow//../more/./luna/../file.txt");
+
+    assertThat(path).isEqualTo("asd/more/file.txt");
+
+  }
+
 }

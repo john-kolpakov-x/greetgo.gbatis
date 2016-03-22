@@ -1,4 +1,4 @@
-package kz.greetgo.gbatis.stru.resource;
+package kz.greetgo.gbatis.struct.resource;
 
 import java.io.InputStream;
 
