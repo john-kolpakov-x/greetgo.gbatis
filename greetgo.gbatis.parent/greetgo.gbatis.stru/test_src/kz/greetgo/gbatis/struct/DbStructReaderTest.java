@@ -27,6 +27,12 @@ public class DbStructReaderTest {
 
     assertThat(dbStruct.typeMap.size()).isGreaterThanOrEqualTo(3);
     assertThat(dbStruct.typeMap.keySet()).contains("client");
+
+    assertThat(dbStruct.typeMap.get("client").subpackage).isEqualTo("main.core");
+    assertThat(dbStruct.typeMap.get("client").name).isEqualTo("client");
+    assertThat(dbStruct.typeMap.get("client").type).isEqualTo("str50");
+    assertThat(dbStruct.typeMap.get("client").comment).isEqualTo("сущность клиент");
+
     assertThat(dbStruct.typeMap.get("client").fieldList).hasSize(3);
 
     assertThat(dbStruct.typeMap.get("client").fieldList.get(0).name).isEqualTo("surname");

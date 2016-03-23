@@ -88,6 +88,11 @@ public class ClassResourceRef implements ResourceRef {
   }
 
   @Override
+  public String display() {
+    return aClass.getSimpleName() + "|" + path;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;

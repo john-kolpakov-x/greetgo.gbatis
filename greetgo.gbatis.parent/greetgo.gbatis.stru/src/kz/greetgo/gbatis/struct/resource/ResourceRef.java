@@ -6,4 +6,6 @@ public interface ResourceRef {
   InputStream getInputStream();
 
   ResourceRef change(String path);
+
+  String display();
 }
