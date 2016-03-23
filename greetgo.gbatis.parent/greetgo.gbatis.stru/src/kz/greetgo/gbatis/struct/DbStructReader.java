@@ -83,6 +83,12 @@ public class DbStructReader {
   private String currentSubpackage = null;
   private ParsedType currentType = null;
 
+  enum Current {
+    NONE, OPTIONS, ESSENCE
+  }
+
+  Current current = Current.NONE;
+
   private static Class<? extends Enum> loadClass(String enumClassName, Place place) {
     try {
       //noinspection unchecked
@@ -124,15 +130,19 @@ public class DbStructReader {
     public void parse() {
       currentType = null;
       currentSubpackage = null;
+      current = Current.NONE;
     }
   }
 
   private static final Pattern ESSENCE = Pattern.compile("(\\w+)(\\s+\\w+)?\\s*(--(.*))?");
   private static final Pattern FIELD = Pattern.compile("\\s+(\\*\\s*)?(\\w+)(\\s+\\w+)?\\s*(--(.*))?");
 
-  private static final Pattern ENUM = Pattern.compile("\\s*@\\s*enum\\s+(\\w+)\\s+(\\w+)\\s*(#.*)?");
+  private static final Pattern ENUM = Pattern.compile("\\s*@\\s*enum\\s+(\\S+)\\s+(\\S+)\\s*(#.*)?");
   private static final Pattern SUBPACKAGE = Pattern.compile("\\s*@\\s*subpackage\\s+(\\S+)\\s*(#.*)?");
   private static final Pattern ALIAS = Pattern.compile("\\s*@\\s*alias\\s+(\\w+)\\s+(\\w+)\\s*(#.*)?");
+
+  private static final Pattern OPTIONS = Pattern.compile("\\s*@\\s*options\\s*(#.*)?");
+  private static final Pattern OPTION = Pattern.compile("\\s+(\\w+)(\\s+\\S.*)?");
 
   class ResourceRefLine implements Line {
     private final String line;
@@ -155,6 +165,7 @@ public class DbStructReader {
         Matcher matcher = ESSENCE.matcher(line);
         if (matcher.matches()) {
           currentType = new ParsedType(currentSubpackage, matcher.group(1), matcher.group(2), matcher.group(4), place);
+          current = Current.ESSENCE;
 
           {
             ParsedType alreadyExistsType = dbStruct.typeMap.get(currentType.name);
@@ -169,6 +180,14 @@ public class DbStructReader {
       }
 
       {
+        Matcher matcher = OPTIONS.matcher(line);
+        if (matcher.matches()) {
+          current = Current.OPTIONS;
+          return;
+        }
+      }
+
+      if (current == Current.ESSENCE) {
         Matcher matcher = FIELD.matcher(line);
         if (matcher.matches()) {
 
@@ -186,6 +205,14 @@ public class DbStructReader {
           }
 
           currentType.fieldList.add(field);
+          return;
+        }
+      }
+
+      if (current == Current.OPTIONS) {
+        Matcher matcher = OPTION.matcher(line);
+        if (matcher.matches()) {
+          dbStruct.options.parseLine(matcher.group(1), matcher.group(2), place);
           return;
         }
       }
@@ -235,7 +262,7 @@ public class DbStructReader {
       }
 
       {
-        System.out.println();
+        throw new UnknownLine(line, place);
       }
 
     }

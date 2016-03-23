@@ -11,11 +11,14 @@ client str50         -- сущность клиент
   name       str500  -- имя
   patronymic line    -- отчество
 
-score str50
-  number word
+color long
+  red   int
+  green int
+  blue  int
 
-transfer str50
-  from score
-  to   score
-  actual bool
-  status TransferStatus
+contract str50
+  number str100
+  client
+  color
+
+@include main.score.dbStruct

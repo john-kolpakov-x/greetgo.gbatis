@@ -13,6 +13,8 @@ subprojects {
   dependencies {
     testCompile 'org.testng:testng:6.9.10'
     testCompile 'org.easytesting:fest-assert:1.4'
+
+    testCompile "postgresql:postgresql:9.1-901-1.jdbc4"
   }
 
   sourceSets {
